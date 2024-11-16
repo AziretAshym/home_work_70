@@ -35,6 +35,7 @@ const ContactsForm = () => {
   return (
     <>
       <h2 className="text-center mb-4">Add new Contact</h2>
+      <div className="d-flex justify-content-center my-3">{addLoading ? <Spinner/> : null}</div>
       <form className="w-50 mx-auto" onSubmit={onSubmit}>
         <div className="input-group mb-3">
           <input
@@ -87,8 +88,8 @@ const ContactsForm = () => {
           type={"submit"}
           className="btn btn-outline-primary"
           disabled={addLoading}
-        >Add contact</button>
-        <div>{addLoading ? <Spinner /> : null}</div>
+        >Add contact
+        </button>
       </form>
 
     </>

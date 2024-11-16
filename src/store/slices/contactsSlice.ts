@@ -37,8 +37,6 @@ export const contactsSlice = createSlice({
       .addCase(addNewContact.rejected, (state) => {
           state.loadings.add = false
         })
-
-
   }
 });
 
