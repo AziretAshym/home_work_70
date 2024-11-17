@@ -3,7 +3,7 @@ import { IContactForm } from '../../types';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { selectAddContactLoading } from '../../store/slices/contactsSlice.ts';
 import { addNewContact } from '../../store/thunks/contact/contactThunks.ts';
-import Spinner from '../UI/Spinner/Spinner.tsx';
+import Spinner from '../../Components/UI/Spinner/Spinner.tsx';
 import { useNavigate } from 'react-router-dom';
 
 const ContactsForm = () => {
@@ -19,6 +19,7 @@ const ContactsForm = () => {
   const dispatch =useAppDispatch();
   const [contact, setContact] =useState<IContactForm>(initialStateToForm);
   const navigate = useNavigate();
+
 
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target
@@ -95,6 +96,15 @@ const ContactsForm = () => {
           />
           <span className="input-group-text bg-primary-subtle text-primary w-25 ps-5">Contact photo</span>
         </div>
+        <div className="d-flex align-items-center gap-5">
+          <p>Photo preview:</p>
+          <img src={contact.photo ? contact.photo : "https://i.pinimg.com/474x/d9/7b/bb/d97bbb08017ac2309307f0822e63d082.jpg"}
+               alt={contact.name}
+               style={{width: "100px", height: "100px", borderRadius: "100%"}}
+               className="border"
+          />
+        </div>
+
         <button
           type={"submit"}
           className="btn btn-outline-primary"
