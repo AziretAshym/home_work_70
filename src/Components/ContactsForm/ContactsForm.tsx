@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { selectAddContactLoading } from '../../store/slices/contactsSlice.ts';
 import { addNewContact } from '../../store/thunks/contact/contactThunks.ts';
 import Spinner from '../UI/Spinner/Spinner.tsx';
+import { useNavigate } from 'react-router-dom';
 
 const ContactsForm = () => {
 
@@ -11,12 +12,13 @@ const ContactsForm = () => {
     name: "",
     phone: "",
     email: "",
-    photo: ""
+    photo: "",
   }
 
   const addLoading = useAppSelector(selectAddContactLoading);
   const dispatch =useAppDispatch();
   const [contact, setContact] =useState<IContactForm>(initialStateToForm);
+  const navigate = useNavigate();
 
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target
@@ -28,8 +30,13 @@ const ContactsForm = () => {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(addNewContact({...contact}));
-    setContact(initialStateToForm);
+    if (contact.name && contact.photo && contact.email && contact.phone) {
+      await dispatch(addNewContact({...contact}));
+      setContact(initialStateToForm);
+      navigate('/contacts');
+    } else {
+      alert('All fields must be filled in!');
+    }
   }
 
   return (
@@ -45,6 +52,7 @@ const ContactsForm = () => {
             name="name"
             value={contact.name}
             onChange={onChangeInput}
+            required
           />
           <span className="input-group-text bg-primary-subtle text-primary w-25 ps-5">Contact name</span>
         </div>
@@ -57,6 +65,7 @@ const ContactsForm = () => {
             name="phone"
             value={contact.phone}
             onChange={onChangeInput}
+            required
           />
           <span className="input-group-text bg-primary-subtle text-primary w-25 ps-5">Contact number</span>
         </div>
@@ -69,6 +78,7 @@ const ContactsForm = () => {
             name="email"
             value={contact.email}
             onChange={onChangeInput}
+            required
           />
           <span className="input-group-text bg-primary-subtle text-primary w-25 ps-5">Contact Email</span>
         </div>
@@ -81,6 +91,7 @@ const ContactsForm = () => {
             name="photo"
             value={contact.photo}
             onChange={onChangeInput}
+            required
           />
           <span className="input-group-text bg-primary-subtle text-primary w-25 ps-5">Contact photo</span>
         </div>

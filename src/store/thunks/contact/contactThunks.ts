@@ -1,10 +1,30 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { IContactForm } from '../../../types';
+import { IContact, IContactApi, IContactForm } from '../../../types';
 import axiosApi from '../../../AxiosApi.ts';
 
-export const addNewContact = createAsyncThunk<void, IContactForm>(
+export const addNewContact = createAsyncThunk(
   'contacts/addNewContact',
-  async (contactToAdd) => {
-    await axiosApi.post('contacts.json', {...contactToAdd});
+  async (contact: IContactForm, { dispatch }) => {
+    const response = await axiosApi.post('/contacts.json', contact);
+    await dispatch(fetchContacts());
+    return response.data;
   }
-)
+);
+
+export const fetchContacts = createAsyncThunk<IContact[], void>(
+  'contacts/fetchContacts',
+  async () => {
+    const response = await axiosApi.get<IContactApi | null>('contacts.json');
+
+    if (response.data) {
+      const contactsInObj = response.data;
+      return Object.keys(contactsInObj).map((contactId) => {
+        return {
+          ...contactsInObj[contactId],
+          id: contactId,
+        };
+      });
+    }
+    return [];
+  }
+);

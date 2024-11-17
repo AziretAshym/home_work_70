@@ -13,8 +13,6 @@ export interface IContactForm {
   photo: string
 }
 
-
-
 export interface IContactApi {
   [id: string]: IContact;
 }
