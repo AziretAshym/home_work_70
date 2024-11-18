@@ -1,7 +1,12 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IContact } from '../../types';
-import { addNewContact, deleteContact, editContact, fetchContacts } from '../thunks/contact/contactThunks.ts';
-import { RootState } from '../../app/store.ts';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { IContact } from "../../types";
+import {
+  addNewContact,
+  deleteContact,
+  editContact,
+  fetchContacts,
+} from "../thunks/contact/contactThunks.ts";
+import { RootState } from "../../app/store.ts";
 
 interface contactsState {
   users: IContact[];
@@ -16,15 +21,17 @@ const initialState: contactsState = {
   loadings: {
     add: false,
     fetching: false,
-  }
-}
+  },
+};
 
-export const selectAddContactLoading = (state: RootState) => state.contacts.loadings.add;
-export const selectFetchContactLoading = (state: RootState) => state.contacts.loadings.fetching;
+export const selectAddContactLoading = (state: RootState) =>
+  state.contacts.loadings.add;
+export const selectFetchContactLoading = (state: RootState) =>
+  state.contacts.loadings.fetching;
 export const selectAllContacts = (state: RootState) => state.contacts.users;
 
 const contactsSlice = createSlice({
-  name:'contacts',
+  name: "contacts",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -42,12 +49,15 @@ const contactsSlice = createSlice({
       .addCase(fetchContacts.pending, (state) => {
         state.loadings.fetching = true;
       })
-      .addCase(fetchContacts.fulfilled, (state, action: PayloadAction<IContact[]>) => {
-        state.loadings.fetching = false;
-        state.users = action.payload
-      })
-      .addCase(fetchContacts.rejected, (state) => {
+      .addCase(
+        fetchContacts.fulfilled,
+        (state, action: PayloadAction<IContact[]>) => {
           state.loadings.fetching = false;
+          state.users = action.payload;
+        },
+      )
+      .addCase(fetchContacts.rejected, (state) => {
+        state.loadings.fetching = false;
       })
 
       .addCase(deleteContact.pending, (state) => {
@@ -68,10 +78,8 @@ const contactsSlice = createSlice({
       })
       .addCase(editContact.rejected, (state) => {
         state.loadings.add = false;
-      })
-
-
-  }
+      });
+  },
 });
 
 export const contactsReducer = contactsSlice.reducer;

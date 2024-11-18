@@ -3,14 +3,14 @@ export interface IContact {
   name: string;
   phone: string;
   email: string;
-  photo: string
+  photo: string;
 }
 
 export interface IContactForm {
   name: string;
   phone: string;
   email: string;
-  photo: string
+  photo: string;
 }
 
 export interface IContactApi {

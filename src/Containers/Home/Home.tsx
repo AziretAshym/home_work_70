@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
-import { selectAllContacts, selectFetchContactLoading } from '../../store/slices/contactsSlice.ts';
-import Spinner from '../../Components/UI/Spinner/Spinner.tsx';
-import { fetchContacts } from '../../store/thunks/contact/contactThunks.ts';
-import ContactModal from '../../Components/ContactDetails/ContactDetails.tsx';
+import React, { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../app/hooks.ts";
+import {
+  selectAllContacts,
+  selectFetchContactLoading,
+} from "../../store/slices/contactsSlice.ts";
+import Spinner from "../../Components/UI/Spinner/Spinner.tsx";
+import { fetchContacts } from "../../store/thunks/contact/contactThunks.ts";
+import ContactModal from "../../Components/ContactDetails/ContactDetails.tsx";
 
 const Home = () => {
   const fetchLoading = useAppSelector(selectFetchContactLoading);
@@ -40,28 +43,31 @@ const Home = () => {
             <p>No contacts</p>
           ) : (
             <>
-              {allContacts.slice().reverse().map((contact) => (
-                <div
-                  className="card w-25 mx-auto mb-3"
-                  key={contact.id}
-                  onClick={() => handleContactClick(contact)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <div className="card-body d-flex align-items-center">
-                    <img
-                      className="me-5"
-                      src={contact.photo}
-                      alt={contact.name}
-                      style={{
-                        width: '75px',
-                        height: '75px',
-                        borderRadius: '100%',
-                      }}
-                    />
-                    <h5 className="card-title">{contact.name}</h5>
+              {allContacts
+                .slice()
+                .reverse()
+                .map((contact) => (
+                  <div
+                    className="card w-25 mx-auto mb-3"
+                    key={contact.id}
+                    onClick={() => handleContactClick(contact)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <div className="card-body d-flex align-items-center">
+                      <img
+                        className="me-5"
+                        src={contact.photo}
+                        alt={contact.name}
+                        style={{
+                          width: "75px",
+                          height: "75px",
+                          borderRadius: "100%",
+                        }}
+                      />
+                      <h5 className="card-title">{contact.name}</h5>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </>
           )}
         </>

@@ -1,13 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { IContactForm } from '../../types';
-import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
-import { selectAddContactLoading, selectAllContacts } from '../../store/slices/contactsSlice.ts';
-import { addNewContact, editContact } from '../../store/thunks/contact/contactThunks.ts';
-import Spinner from '../../Components/UI/Spinner/Spinner.tsx';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { IContactForm } from "../../types";
+import { useAppDispatch, useAppSelector } from "../../app/hooks.ts";
+import {
+  selectAddContactLoading,
+  selectAllContacts,
+} from "../../store/slices/contactsSlice.ts";
+import {
+  addNewContact,
+  editContact,
+} from "../../store/thunks/contact/contactThunks.ts";
+import Spinner from "../../Components/UI/Spinner/Spinner.tsx";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ContactsForm = () => {
-
   const initialStateToForm: IContactForm = {
     name: "",
     phone: "",
@@ -50,19 +57,25 @@ const ContactsForm = () => {
     if (contact.name && contact.photo && contact.email && contact.phone) {
       if (id) {
         await dispatch(editContact({ id, contact }));
+        toast.success("Contact was edited!");
       } else {
         await dispatch(addNewContact({ ...contact }));
+        toast.success("Contact was created!");
       }
-      navigate('/contacts');
+      navigate("/contacts");
     } else {
-      alert('All fields must be filled in!');
+      alert("All fields must be filled in!");
     }
   };
 
   return (
     <>
-      <h2 className="text-center mb-4">{id ? 'Edit Contact' : 'Add New Contact'}</h2>
-      <div className="d-flex justify-content-center my-3">{addLoading ? <Spinner /> : null}</div>
+      <h2 className="text-center mb-4">
+        {id ? "Edit Contact" : "Add New Contact"}
+      </h2>
+      <div className="d-flex justify-content-center my-3">
+        {addLoading ? <Spinner /> : null}
+      </div>
       <form className="w-50 mx-auto" onSubmit={onSubmit}>
         <div className="input-group mb-3">
           <input
@@ -74,7 +87,9 @@ const ContactsForm = () => {
             onChange={onChangeInput}
             required
           />
-          <span className="input-group-text bg-primary-subtle text-primary w-25 ps-5">Contact name</span>
+          <span className="input-group-text bg-primary-subtle text-primary w-25 ps-5">
+            Contact name
+          </span>
         </div>
 
         <div className="input-group mb-3">
@@ -87,7 +102,9 @@ const ContactsForm = () => {
             onChange={onChangeInput}
             required
           />
-          <span className="input-group-text bg-primary-subtle text-primary w-25 ps-5">Contact number</span>
+          <span className="input-group-text bg-primary-subtle text-primary w-25 ps-5">
+            Contact number
+          </span>
         </div>
 
         <div className="input-group mb-3">
@@ -100,7 +117,9 @@ const ContactsForm = () => {
             onChange={onChangeInput}
             required
           />
-          <span className="input-group-text bg-primary-subtle text-primary w-25 ps-5">Contact Email</span>
+          <span className="input-group-text bg-primary-subtle text-primary w-25 ps-5">
+            Contact Email
+          </span>
         </div>
 
         <div className="input-group mb-4">
@@ -113,20 +132,29 @@ const ContactsForm = () => {
             onChange={onChangeInput}
             required
           />
-          <span className="input-group-text bg-primary-subtle text-primary w-25 ps-5">Contact photo</span>
+          <span className="input-group-text bg-primary-subtle text-primary w-25 ps-5">
+            Contact photo
+          </span>
         </div>
         <div className="d-flex align-items-center gap-5">
           <p>Photo preview:</p>
           <img
-            src={contact.photo || 'https://i.pinimg.com/474x/d9/7b/bb/d97bbb08017ac2309307f0822e63d082.jpg'}
+            src={
+              contact.photo ||
+              "https://i.pinimg.com/474x/d9/7b/bb/d97bbb08017ac2309307f0822e63d082.jpg"
+            }
             alt={contact.name}
-            style={{ width: '100px', height: '100px', borderRadius: '100%' }}
+            style={{ width: "100px", height: "100px", borderRadius: "100%" }}
             className="border"
           />
         </div>
 
-        <button type="submit" className="btn btn-outline-primary" disabled={addLoading}>
-          {id ? 'Save' : 'Add Contact'}
+        <button
+          type="submit"
+          className="btn btn-outline-primary"
+          disabled={addLoading}
+        >
+          {id ? "Save" : "Add Contact"}
         </button>
       </form>
     </>
