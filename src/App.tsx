@@ -15,6 +15,7 @@ const App = () => {
           <Route path="/" element={<Navigate to="/contacts" replace />} />
           <Route path="/contacts" element={<Home />} />
           <Route path="/contacts/new-contact" element={<ContactsForm />} />
+          <Route path="/contacts/:id" element={<ContactsForm />} />
           <Route path="*" element={<h1 className="text-center">Not Found</h1>}></Route>
         </Routes>
       </div>;

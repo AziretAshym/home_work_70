@@ -1,14 +1,22 @@
 import React from 'react';
 import { useAppDispatch } from '../../app/hooks.ts';
 import { deleteContact } from '../../store/thunks/contact/contactThunks.ts';
+import { useNavigate } from 'react-router-dom';
 
 const ContactDetails = ({ contact, onClose }) => {
 
   const dispatch = useAppDispatch();
 
+  const navigate = useNavigate();
+
+
   const handleDelete = async () => {
     await dispatch(deleteContact(contact.id));
     onClose();
+  };
+
+  const handleEdit = () => {
+    navigate(`/contacts/${contact.id}`);
   };
 
   return (
@@ -51,7 +59,11 @@ const ContactDetails = ({ contact, onClose }) => {
 
 
             <div className="modal-footer gap-3">
-              <button type="button" className="btn btn-outline-primary">Edit</button>
+              <button
+                type="button"
+                className="btn btn-outline-primary"
+                onClick={handleEdit}
+              >Edit</button>
               <button
                 type="button"
                 className="btn btn-outline-danger"

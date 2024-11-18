@@ -1,49 +1,68 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IContactForm } from '../../types';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
-import { selectAddContactLoading } from '../../store/slices/contactsSlice.ts';
-import { addNewContact } from '../../store/thunks/contact/contactThunks.ts';
+import { selectAddContactLoading, selectAllContacts } from '../../store/slices/contactsSlice.ts';
+import { addNewContact, editContact } from '../../store/thunks/contact/contactThunks.ts';
 import Spinner from '../../Components/UI/Spinner/Spinner.tsx';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const ContactsForm = () => {
 
-  const initialStateToForm = {
+  const initialStateToForm: IContactForm = {
     name: "",
     phone: "",
     email: "",
     photo: "",
-  }
-
+  };
   const addLoading = useAppSelector(selectAddContactLoading);
-  const dispatch =useAppDispatch();
-  const [contact, setContact] =useState<IContactForm>(initialStateToForm);
-  const navigate = useNavigate();
+  const allContacts = useAppSelector(selectAllContacts);
+  const dispatch = useAppDispatch();
 
+  const navigate = useNavigate();
+  const { id } = useParams();
+
+  const [contact, setContact] = useState<IContactForm>(initialStateToForm);
+
+  useEffect(() => {
+    if (id) {
+      const contactToEdit = allContacts.find((c) => c.id === id);
+      if (contactToEdit) {
+        setContact({
+          name: contactToEdit.name,
+          phone: contactToEdit.phone,
+          email: contactToEdit.email,
+          photo: contactToEdit.photo,
+        });
+      }
+    }
+  }, [id, allContacts]);
 
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target
-    setContact(prevState => ({
+    const { name, value } = e.target;
+    setContact((prevState) => ({
       ...prevState,
       [name]: value,
-    }))
+    }));
   };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (contact.name && contact.photo && contact.email && contact.phone) {
-      await dispatch(addNewContact({...contact}));
-      setContact(initialStateToForm);
+      if (id) {
+        await dispatch(editContact({ id, contact }));
+      } else {
+        await dispatch(addNewContact({ ...contact }));
+      }
       navigate('/contacts');
     } else {
       alert('All fields must be filled in!');
     }
-  }
+  };
 
   return (
     <>
-      <h2 className="text-center mb-4">Add new Contact</h2>
-      <div className="d-flex justify-content-center my-3">{addLoading ? <Spinner/> : null}</div>
+      <h2 className="text-center mb-4">{id ? 'Edit Contact' : 'Add New Contact'}</h2>
+      <div className="d-flex justify-content-center my-3">{addLoading ? <Spinner /> : null}</div>
       <form className="w-50 mx-auto" onSubmit={onSubmit}>
         <div className="input-group mb-3">
           <input
@@ -98,21 +117,18 @@ const ContactsForm = () => {
         </div>
         <div className="d-flex align-items-center gap-5">
           <p>Photo preview:</p>
-          <img src={contact.photo ? contact.photo : "https://i.pinimg.com/474x/d9/7b/bb/d97bbb08017ac2309307f0822e63d082.jpg"}
-               alt={contact.name}
-               style={{width: "100px", height: "100px", borderRadius: "100%"}}
-               className="border"
+          <img
+            src={contact.photo || 'https://i.pinimg.com/474x/d9/7b/bb/d97bbb08017ac2309307f0822e63d082.jpg'}
+            alt={contact.name}
+            style={{ width: '100px', height: '100px', borderRadius: '100%' }}
+            className="border"
           />
         </div>
 
-        <button
-          type={"submit"}
-          className="btn btn-outline-primary"
-          disabled={addLoading}
-        >Add contact
+        <button type="submit" className="btn btn-outline-primary" disabled={addLoading}>
+          {id ? 'Save' : 'Add Contact'}
         </button>
       </form>
-
     </>
   );
 };

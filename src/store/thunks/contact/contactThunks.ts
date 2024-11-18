@@ -36,3 +36,11 @@ export const deleteContact = createAsyncThunk(
     dispatch(fetchContacts());
   }
 );
+
+export const editContact = createAsyncThunk(
+  'contacts/editeContact',
+  async ({ id, contact }: { id: string; contact: IContact }, { dispatch }) => {
+    await axiosApi.put(`/contacts/${id}.json`, contact);
+    dispatch(fetchContacts());
+  }
+);
