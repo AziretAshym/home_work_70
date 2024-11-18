@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IContact } from '../../types';
-import { addNewContact, fetchContacts } from '../thunks/contact/contactThunks.ts';
+import { addNewContact, deleteContact, fetchContacts } from '../thunks/contact/contactThunks.ts';
 import { RootState } from '../../app/store.ts';
 
 interface contactsState {
@@ -48,6 +48,16 @@ const contactsSlice = createSlice({
       })
       .addCase(fetchContacts.rejected, (state) => {
           state.loadings.fetching = false;
+      })
+
+      .addCase(deleteContact.pending, (state) => {
+        state.loadings.add = true;
+      })
+      .addCase(deleteContact.fulfilled, (state) => {
+        state.loadings.add = false;
+      })
+      .addCase(deleteContact.rejected, (state) => {
+        state.loadings.add = false;
       })
   }
 });

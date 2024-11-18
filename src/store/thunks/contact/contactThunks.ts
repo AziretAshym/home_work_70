@@ -28,3 +28,11 @@ export const fetchContacts = createAsyncThunk<IContact[], void>(
     return [];
   }
 );
+
+export const deleteContact = createAsyncThunk(
+  'contacts/deleteContact',
+  async (contactId: string, { dispatch }) => {
+    await axiosApi.delete(`/contacts/${contactId}.json`);
+    dispatch(fetchContacts());
+  }
+);

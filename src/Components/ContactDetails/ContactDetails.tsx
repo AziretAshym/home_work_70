@@ -1,6 +1,16 @@
 import React from 'react';
+import { useAppDispatch } from '../../app/hooks.ts';
+import { deleteContact } from '../../store/thunks/contact/contactThunks.ts';
 
 const ContactDetails = ({ contact, onClose }) => {
+
+  const dispatch = useAppDispatch();
+
+  const handleDelete = async () => {
+    await dispatch(deleteContact(contact.id));
+    onClose();
+  };
+
   return (
     <>
       <div
@@ -15,7 +25,7 @@ const ContactDetails = ({ contact, onClose }) => {
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">{contact.name}</h5>
+              <h5 className="modal-title fw-bold">{contact.name}</h5>
               <button
                 type="button"
                 className="btn-close"
@@ -32,17 +42,21 @@ const ContactDetails = ({ contact, onClose }) => {
                 className="mb-3"
               />
 
-              <div>
-                <p><strong>Phone:</strong> {contact.phone}</p>
+              <div className="d-flex flex-column">
+                <strong>Phone: <a href="#">{contact.phone}</a></strong>
+                <strong>Email: <a href="#">{contact.email}</a></strong>
 
-                <p><strong>Email:</strong> {contact.email}</p>
               </div>
             </div>
 
 
             <div className="modal-footer gap-3">
               <button type="button" className="btn btn-outline-primary">Edit</button>
-              <button type="button" className="btn btn-outline-danger">Delete</button>
+              <button
+                type="button"
+                className="btn btn-outline-danger"
+                onClick={handleDelete}
+              >Delete</button>
             </div>
           </div>
         </div>
